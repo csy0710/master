@@ -17,6 +17,6 @@ public class MemberApplication {
         SpringApplication app = new SpringApplication(MemberApplication.class);
         Environment env = app.run(args).getEnvironment();//拿到整个项目运行的环境
         L0G.info("启动成功!!");
-        L0G.info("测试地址:\thttp://127.0.0.1:{}/hello", env.getProperty("server.port"));//通过环境获取系统的变量 server.port是启动端口
+        L0G.info("测试地址:\thttp://127.0.0.1:{}{}/hello", env.getProperty("server.port"),env.getProperty("server.servlet.context-path"));//通过环境获取系统的变量 server.port是启动端口
     }
 }
