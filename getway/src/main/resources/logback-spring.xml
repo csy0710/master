@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 修改一下路径-->
+    <property name="PATH" value="./log/gateway"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{mm:ss.SSS} %highlight(%-5level) %blue(%-30logger{30}:%-4line) %thread %green(%-18X{LOG_ID}) %msg%n</pattern>
+        </encoder>
+        <!-- 添加过滤器，只允许INFO及以上级别的日志输出到控制台 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <appender name="TRACE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${PATH}/trace.log</file>
+        <!-- 使用推荐的 SizeAndTimeBasedRollingPolicy 替代过时的 SizeAndTimeBasedFNATP -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${PATH}/trace.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <!-- 可以添加其他参数，如最大历史记录天数 -->
+            <!-- <maxHistory>30</maxHistory> -->
+        </rollingPolicy>
+        <!-- 使用 encoder 替代 layout -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %-50logger{50}:%-4line %green(%-18X{LOG_ID}) %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${PATH}/error.log</file>
+        <!-- 使用推荐的 SizeAndTimeBasedRollingPolicy 替代过时的 SizeAndTimeBasedFNATP -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${PATH}/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <!-- 可以添加其他参数，如最大历史记录天数 -->
+            <!-- <maxHistory>30</maxHistory> -->
+        </rollingPolicy>
+        <!-- 使用 encoder 替代 layout -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %-50logger{50}:%-4line %green(%-18X{LOG_ID}) %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- 设置根日志级别为INFO，但为特定包设置更详细的级别 -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="TRACE_FILE" />
+        <appender-ref ref="ERROR_FILE" />
+    </root>
+
+    <!-- 为您自己的代码设置TRACE级别，这样只有您的代码的详细日志会被记录 -->
+    <logger name="com.jy.template.member" level="TRACE" additivity="false">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="TRACE_FILE" />
+        <appender-ref ref="ERROR_FILE" />
+    </logger>
+
+    <!-- 减少Spring框架的日志输出 -->
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.apache.tomcat" level="INFO"/>
+    <logger name="org.hibernate" level="INFO"/>
+</configuration>
