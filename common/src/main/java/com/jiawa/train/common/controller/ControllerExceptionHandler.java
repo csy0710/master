@@ -52,7 +52,7 @@ public class ControllerExceptionHandler {
      * @param e
      * @return
      */
-    @ExceptionHandler(value = BindException.class)
+    @ExceptionHandler(value = BindException.class)//这是catch的手机号不能为空的异常处理
     @ResponseBody
     public CommonResp exceptionHandler(BindException e) {
         CommonResp commonResp = new CommonResp();
