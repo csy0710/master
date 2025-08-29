@@ -19,7 +19,7 @@
     </properties>
 
     <dependencies>
-
+<!--引入公共模块common的依赖-->
         <dependency>
             <groupId>com.jiawa</groupId>
             <artifactId>common</artifactId>
@@ -37,6 +37,13 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
+        </dependency>
+
 
 
     </dependencies>
