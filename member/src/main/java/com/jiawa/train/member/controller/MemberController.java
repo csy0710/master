@@ -8,10 +8,7 @@ import com.jiawa.train.member.resp.MemberLoginResp;
 import com.jiawa.train.member.service.MemberService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/member")
@@ -39,12 +36,13 @@ public class MemberController {
 
 
     @PostMapping("/send-code")
-    public CommonResp<Long> sendCode(@Valid MemberSendCodeReq req){
+    public CommonResp<Long> sendCode(@Valid @RequestBody MemberSendCodeReq req){
 
        memberService.sendCode(req);
 
         return new CommonResp<>();
-    }    @PostMapping("/login")
+    }
+    @PostMapping("/login")
     public CommonResp<MemberLoginResp> login(@Valid MemberLoginReq req){
         MemberLoginResp resp= memberService.login(req);
 
