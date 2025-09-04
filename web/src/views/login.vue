@@ -55,7 +55,7 @@
     const sendCode = () => {
     axios.post("http://localhost:8000/member/member/send-code",//先请求
         {mobile:loginForm.mobile//传递参数 json传递参数方法 展开一个个写
-        }).then(response=>{console.log(response);//得到一个结果
+        }).then(response=>{
         let data = response.data;//获取结果的数据
         if (data.success){//判断success
           notification.success({description:'发送验证码成功！'})//成功做什么处理
@@ -70,13 +70,10 @@
       axios.post("http://localhost:8000/member/member/login",//先请求
           loginForm).//直接传递实体
       then((response)=> {
-        console.log(response);//得到一个结果
         let data = response.data;//获取结果的数据
         if (data.success) {
           notification.success({description: '登录成功！'});
           //登录成功，跳到控制台主页
-
-          console.log("登录成功: ", data.content);
         } else {
           notification.error({description: data.message});
         }
