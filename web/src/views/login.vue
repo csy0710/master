@@ -6,8 +6,7 @@
         :model="loginForm"
         name="basic"
         autocomplete="off"
-        @finish="onFinish"
-        @finishFailed="onFinishFailed"
+
     >
       <a-form-item
           label=""
@@ -36,7 +35,7 @@
       </a-form-item>
 
       <a-form-item :wrapper-col="{ offset: 11, span: 8 }">
-        <a-button type="primary" html-type="submit">登录</a-button>
+        <a-button type="primary" @click="login" >登录</a-button>
       </a-form-item>
         </a-form>
       </a-col>
@@ -46,24 +45,43 @@
   <script setup>
     import { reactive } from 'vue';
     import axios from "axios";
+    import { notification } from 'ant-design-vue';
     const loginForm = reactive({
       mobile:'13000000000',
       code:''
     });
-    const onFinish = values => {
-      console.log('Success:', values);
-    };
 
-    const onFinishFailed = errorInfo => {
-      console.log('Failed:', errorInfo);
-    };
 
     const sendCode = () => {
-    axios.post("http://localhost:8000/member/member/send-code",{mobile:loginForm.mobile}).then(response=>{console.log(response);
-
+    axios.post("http://localhost:8000/member/member/send-code",//先请求
+        {mobile:loginForm.mobile//传递参数 json传递参数方法 展开一个个写
+        }).then(response=>{console.log(response);//得到一个结果
+        let data = response.data;//获取结果的数据
+        if (data.success){//判断success
+          notification.success({description:'发送验证码成功！'})//成功做什么处理
+          loginForm.code="8888"
+        }else {
+          notification.error({description:data.message})//失败做什么处理
+        }
 
       });
     };
+    const login = () => {
+      axios.post("http://localhost:8000/member/member/login",//先请求
+          loginForm).//直接传递实体
+      then((response)=> {
+        console.log(response);//得到一个结果
+        let data = response.data;//获取结果的数据
+        if (data.success) {
+          notification.success({description: '登录成功！'});
+          //登录成功，跳到控制台主页
+
+          console.log("登录成功: ", data.content);
+        } else {
+          notification.error({description: data.message});
+        }
+      })
+    }
 
   </script>
   <style>
