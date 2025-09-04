@@ -53,7 +53,7 @@
 
 
     const sendCode = () => {
-    axios.post("http://localhost:8000/member/member/send-code",//先请求
+    axios.post("/member/member/send-code",//先请求
         {mobile:loginForm.mobile//传递参数 json传递参数方法 展开一个个写
         }).then(response=>{
         let data = response.data;//获取结果的数据
@@ -67,7 +67,7 @@
       });
     };
     const login = () => {
-      axios.post("http://localhost:8000/member/member/login",//先请求
+      axios.post("/member/member/login",//先请求
           loginForm).//直接传递实体
       then((response)=> {
         let data = response.data;//获取结果的数据
