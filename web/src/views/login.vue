@@ -46,7 +46,7 @@
     import { reactive } from 'vue';
     import axios from "axios";
     import { notification } from 'ant-design-vue';
-    // import store from "@/store";
+    import store from "@/store";
     import { useRouter } from "vue-router";
 
     const router=useRouter();
@@ -78,7 +78,7 @@
           notification.success({description: '登录成功！'});
           //登录成功，跳到控制台主页
           router.push("/")
-          // store.commit("setMember",data.content);//调用store里的store方法使用这种格式，调用store中的setMember方法和参数data.content
+          store.commit("setMember",data.content);//调用store里的store方法使用这种格式，调用store中的setMember方法和参数data.content
         } else {
           notification.error({description: data.message});
         }
