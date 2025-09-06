@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class SpringMvcConfig implements WebMvcConfigurer {
 
    @Resource
-   LogInterceptor logInterceptor;
+   LogInterceptor logInterceptor;//将拦截器注入进来
 
    @Resource
    MemberInterceptor memberInterceptor;
