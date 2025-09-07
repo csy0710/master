@@ -17,17 +17,17 @@
         mode="horizontal"
         :style="{ lineHeight: '64px' }"
     >
-      <a-menu-item key="/welcome">
+      <a-menu-item key="/welcome"><!--改动-->
         <router-link to="/welcome">
           <coffee-outlined /> &nbsp; 欢迎
         </router-link>
       </a-menu-item>
-      <a-menu-item key="/passenger">
+      <a-menu-item key="/passenger"><!--改动-->
         <router-link to="/passenger">
           <user-outlined /> &nbsp; 乘车人管理
         </router-link>
       </a-menu-item>
-      <a-menu-item key="/ticket">
+      <a-menu-item key="/ticket"><!--改动-->
         <router-link to="/ticket">
           <user-outlined /> &nbsp; 余票查询
         </router-link>
