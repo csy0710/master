@@ -68,7 +68,7 @@ export default defineComponent({
       creaeTime:undefined,
       updateTime:undefined,
     });
-    const PASSENGER_TYPE_ARRAY = [{key:"1",value:"成人"},{key:"2",value:"儿童"},{key:"3",value:"学生"}]
+    const PASSENGER_TYPE_ARRAY = window.PASSENGER_TYPE;
 
     const passengers = ref([]);
 
