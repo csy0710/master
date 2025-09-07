@@ -86,7 +86,7 @@ export default defineComponent({
     };
 
     const onEdit = (record) => {
-      passenger.value = record
+      passenger.value = window.Tool.copy(record);//将record使用tool中的copy工具类进行重新赋值，解决在编辑未提交时，页面跟随输入改变的问题
       visible.value = true;
     };
 
