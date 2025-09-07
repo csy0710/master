@@ -20,7 +20,6 @@ public class PassengerController {
 
     @PostMapping("/save")
     public CommonResp<Object> save(@Valid @RequestBody PassengerSaveReq req) {
-
         passengerService.save(req);
         return new CommonResp<>();
     }

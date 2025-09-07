@@ -30,11 +30,18 @@ public class PassengerService {
         DateTime now = DateTime.now();
         // 将请求对象req的属性复制到Passenger对象中（需要确保两个类的属性名和类型匹配）
         Passenger passenger = BeanUtil.copyProperties(req, Passenger.class);
-        passenger.setMemberId(LoginMemberContext.getId());//拦截器获取headers数据，得到用户id
-        passenger.setId(SnowUtil.getSnowflakeNextId());
-        passenger.setCreateTime(now);
-        passenger.setUpdateTime(now);
-        passengerMapper.insert(passenger);
+        if (ObjectUtil.isNull(passenger.getId())){/*根据id判断是新增保存还是编辑保存*/
+            /*新增保存*/
+            passenger.setMemberId(LoginMemberContext.getId());//拦截器获取headers数据，得到用户id
+            passenger.setId(SnowUtil.getSnowflakeNextId());
+            passenger.setCreateTime(now);
+            passenger.setUpdateTime(now);
+            passengerMapper.insert(passenger);
+        }else {/*编辑保存*/
+            passenger.setUpdateTime(now);
+            passengerMapper.updateByPrimaryKey(passenger);
+        }
+
     }
 
     public PageResp<PassengerQueryResp> queryList(PassengerQueryReq req){
