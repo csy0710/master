@@ -16,7 +16,14 @@ const routes = [
     meta:{
       loginRequire:true
     },
-  }
+    children: [{
+      path: 'welcome',
+      component: () => import('../views/main/welcome.vue'),
+    }]
+  },{
+    path: '',//访问根域名（‘/’）直接跳转到根域名下welcome，/main/welcome
+    redirect: '/welcome'
+  },
 ]
 
 const router = createRouter({

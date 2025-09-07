@@ -77,7 +77,7 @@
         if (data.success) {
           notification.success({description: '登录成功！'});
           //登录成功，跳到控制台主页
-          router.push("/")
+          router.push("/welcome")
           store.commit("setMember",data.content);//调用store里的store方法使用这种格式，调用store中的setMember方法和参数data.content
         } else {
           notification.error({description: data.message});
