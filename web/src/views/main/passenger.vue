@@ -13,6 +13,12 @@
   <template #bodyCell="{ column, record }">
     <template v-if="column.dataIndex === 'operation'">
       <a-space>
+        <a-popconfirm
+            title="删除后不可恢复，确认删除?"
+            @confirm="onDelete(record)"
+            ok-text="确认" cancel-text="取消">
+          <a style="color: red">删除</a>
+        </a-popconfirm>
         <a @click="onEdit(record)">编辑</a>
       </a-space>
     </template>
@@ -89,6 +95,22 @@ export default defineComponent({
       passenger.value = window.Tool.copy(record);//将record使用tool中的copy工具类进行重新赋值，解决在编辑未提交时，页面跟随输入改变的问题
       visible.value = true;
     };
+
+    const onDelete = (record) => {
+      axios.delete("/member/passenger/delete/" + record.id).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          notification.success({description: "删除成功！"});
+          handleQuery({
+            page: pagination.value.current,
+            size: pagination.value.pageSize,
+          });
+        } else {
+          notification.error({description: data.message});
+        }
+      });
+    };
+
 
     const handleOk = () => {
       axios.post("/member/passenger/save", passenger.value).then((response) => {
@@ -169,6 +191,7 @@ export default defineComponent({
       loading,
       onAdd,
       onEdit,
+      onDelete,
     };
   },
 });
