@@ -22,6 +22,13 @@
         <a @click="onEdit(record)">编辑</a>
       </a-space>
     </template>
+    <template v-else-if="column.dataIndex === 'type'">
+        <span v-for="item in PASSENGER_TYPE_ARRAY" :key="item.key">
+          <span v-if="item.key === record.type">
+            {{item.value}}
+          </span>
+        </span>
+    </template>
   </template>
   </a-table>
   <a-modal v-model:visible="visible" title="乘车人" @ok="handleOk"
@@ -35,7 +42,7 @@
       </a-form-item>
       <a-form-item label="旅客类型">
         <a-select v-model:value="passenger.type">
-          <a-select-option v-for="item in PASSENGER_TYPE_ARRAY" :key="item.code" :value="item.code">
+          <a-select-option v-for="item in PASSENGER_TYPE_ARRAY" :key="item.key" :value="item.key">
             {{item.value}}
           </a-select-option>
         </a-select>
@@ -61,7 +68,7 @@ export default defineComponent({
       creaeTime:undefined,
       updateTime:undefined,
     });
-    const PASSENGER_TYPE_ARRAY = [{key:"1",value:"成人1"},{key:"2",value:"成人2"},{key:"3",value:"成人3"}]
+    const PASSENGER_TYPE_ARRAY = [{key:"1",value:"成人"},{key:"2",value:"儿童"},{key:"3",value:"学生"}]
 
     const passengers = ref([]);
 
