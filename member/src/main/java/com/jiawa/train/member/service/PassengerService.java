@@ -3,6 +3,7 @@ package com.jiawa.train.member.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
+import com.github.pagehelper.PageHelper;
 import com.jiawa.train.common.context.LoginMemberContext;
 import com.jiawa.train.common.util.SnowUtil;
 import com.jiawa.train.member.domain.Passenger;
@@ -37,6 +38,7 @@ public class PassengerService {
         if (ObjectUtil.isNotNull(req.getMemberId())){// 条件判断：如果请求参数中的会员ID不为空，则添加会员ID等于条件
             criteria.andMemberIdEqualTo(req.getMemberId());
         } // 执行查询，获取乘客实体列表
+        PageHelper.startPage(2,2);
         List<Passenger> passengerList = passengerMapper.selectByExample(passengerExample);
         // 将实体列表转换为响应对象列表（DTO转换）
         List<PassengerQueryResp> List = BeanUtil.copyToList(passengerList, PassengerQueryResp.class);
