@@ -24,3 +24,8 @@ token: {{token}}
   "idCard": "123321",
   "type":"1"
 }
+
+###
+DELETE http://localhost:8000/member/passenger/delete/1964685921257394176
+Content-Type: application/json
+token: {{token}}

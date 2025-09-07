@@ -30,6 +30,10 @@ public class PassengerController {
         PageResp<PassengerQueryResp> list = passengerService.queryList(req);
         return new CommonResp<>(list);
     }
-
+    @DeleteMapping("/delete/{id}")/*resful风格的请求*/
+    public CommonResp<Object> delete(@PathVariable Long id) {/*@PathVariable注解，取@DeleteMapping("/delete/{id}")变量*/
+        passengerService.delete(id);
+        return new CommonResp<>();
+    }
 
 }
