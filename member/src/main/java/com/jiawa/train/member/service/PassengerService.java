@@ -38,7 +38,7 @@ public class PassengerService {
         if (ObjectUtil.isNotNull(req.getMemberId())){// 条件判断：如果请求参数中的会员ID不为空，则添加会员ID等于条件
             criteria.andMemberIdEqualTo(req.getMemberId());
         } // 执行查询，获取乘客实体列表
-        PageHelper.startPage(2,2);
+        PageHelper.startPage(req.getPage(), req.getSize());
         List<Passenger> passengerList = passengerMapper.selectByExample(passengerExample);
         // 将实体列表转换为响应对象列表（DTO转换）
         List<PassengerQueryResp> List = BeanUtil.copyToList(passengerList, PassengerQueryResp.class);
