@@ -16,7 +16,7 @@
         theme="dark"
         mode="horizontal"
         :style="{ lineHeight: '64px' }"
-    >
+    ><!--将a-menu-item中的key放入组件selectedKeys（选中哪些key）-->
       <a-menu-item key="/welcome"><!--改动-->
         <router-link to="/welcome">
           <coffee-outlined /> &nbsp; 欢迎
@@ -39,18 +39,18 @@
 <script>
 import {defineComponent, ref, watch} from 'vue';
 import store from "@/store";
-import router from '@/router'
+import router from '@/router'/*<!--改动-->*/
 
 export default defineComponent({
   name: "the-header-view",
   setup() {
     let member = store.state.member;
-    const selectedKeys = ref([]);
+    const selectedKeys = ref([]);/*对应上面的selectedKeys声明成一个数组ref*/
 
-    watch(() => router.currentRoute.value.path, (newValue) => {
+    watch(() => router.currentRoute.value.path, (newValue) => {/*watch是被动监视页面路由变化，当页面路由发生变化，找到key值对应的组件使它成为激活状态*/
       console.log('watch', newValue);
-      selectedKeys.value = [];
-      selectedKeys.value.push(newValue);
+      selectedKeys.value = [];/*每次路由变换首先清空*/
+      selectedKeys.value.push(newValue);/*侦听页面变化时将newValue（页面上更新的路由）放入selectedKeys，实现组件响应，因为key和路由保持一致*/
     }, {immediate: true});
     return {
       member,

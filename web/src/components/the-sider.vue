@@ -33,7 +33,7 @@ export default defineComponent({
   setup() {
     const selectedKeys = ref([]);
 
-    watch(() => router.currentRoute.value.path, (newValue) => {
+    watch(() => router.currentRoute.value.path, (newValue) => {/*改动*/
       console.log('watch', newValue);
       selectedKeys.value = [];
       selectedKeys.value.push(newValue);
