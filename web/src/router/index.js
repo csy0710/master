@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import store from "@/store";
 import {notification} from "ant-design-vue";
-
+//路由页面，对页面的跳转进行编辑
 //静态导入适合小型项目，页面少，对编译后的文件大小影响不大
 const routes = [
 
@@ -19,7 +19,11 @@ const routes = [
     children: [{
       path: 'welcome',
       component: () => import('../views/main/welcome.vue'),
-    }]
+    },
+      {
+        path: 'passenger',
+        component: () => import('../views/main/passenger.vue'),
+      },]
   },{
     path: '',//访问根域名（‘/’）直接跳转到根域名下welcome，/main/welcome
     redirect: '/welcome'
