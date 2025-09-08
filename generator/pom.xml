@@ -17,6 +17,17 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+
+    </dependencies>
     <build>
         <plugins>
             <plugin>
@@ -28,13 +39,7 @@
                     <overwrite>true</overwrite>
                     <verbose>true</verbose>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>mysql</groupId>
-                        <artifactId>mysql-connector-java</artifactId>
-                        <version>8.0.22</version>
-                    </dependency>
-                </dependencies>
+
             </plugin>
         </plugins>
     </build>
