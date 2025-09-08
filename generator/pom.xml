@@ -26,6 +26,16 @@
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
         </dependency>
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+            <version>1.2.0</version>
+        </dependency>
 
     </dependencies>
     <build>
@@ -36,6 +46,7 @@
                 <version>1.4.0</version>
                 <configuration>
                     <configurationFile>src/main/resources/generator-config-member.xml</configurationFile>
+<!--                    <configurationFile>src/main/resources/generator-config-business.xml</configurationFile>-->
                     <overwrite>true</overwrite>
                     <verbose>true</verbose>
                 </configuration>
