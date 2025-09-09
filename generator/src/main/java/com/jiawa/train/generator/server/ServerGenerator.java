@@ -86,6 +86,7 @@ public class ServerGenerator {
         gen(Domain, param,"service","service");
         gen(Domain, param,"controller","controller");
           gen(Domain, param,"req","saveReq");
+        gen(Domain, param, "req", "queryReq");
 
     }
     /*将输出写成一个方法*/

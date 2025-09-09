@@ -5,7 +5,6 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jiawa.train.common.context.LoginMemberContext;
 import com.jiawa.train.common.resp.PageResp;
 import com.jiawa.train.common.util.SnowUtil;
 import com.jiawa.train.${module}.domain.${Domain};
@@ -32,7 +31,6 @@ public class ${Domain}Service {
         ${Domain} ${domain} = BeanUtil.copyProperties(req, ${Domain}.class);
         if (ObjectUtil.isNull(${domain}.getId())){/*根据id判断是新增保存还是编辑保存*/
             /*新增保存*/
-            ${domain}.setMemberId(LoginMemberContext.getId());//拦截器获取headers数据，得到用户id
             ${domain}.setId(SnowUtil.getSnowflakeNextId());
             ${domain}.setCreateTime(now);
             ${domain}.setUpdateTime(now);
@@ -48,9 +46,7 @@ public class ${Domain}Service {
         ${Domain}Example ${domain}Example = new ${Domain}Example();// 创建MyBatis的Example查询对象
         ${domain}Example.setOrderByClause("id desc");
         ${Domain}Example.Criteria criteria = ${domain}Example.createCriteria();    // 创建查询条件Criteria对象
-        if (ObjectUtil.isNotNull(req.getMemberId())){// 条件判断：如果请求参数中的会员ID不为空，则添加会员ID等于条件
-            criteria.andMemberIdEqualTo(req.getMemberId());
-        } // 执行查询，获取乘客实体列表
+
         /*在${Domain}QueryReq req传入的参数中包含页码和页数*/
         LOG.info("查询页码：{}",req.getPage());
         LOG.info("每条页数：{}",req.getSize());
