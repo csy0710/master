@@ -6,7 +6,9 @@ import cn.hutool.json.JSONUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -166,5 +168,17 @@ public class DbUtil {
         } else {
             return "String";
         }
+    }
+
+    /**
+     * 获取所有的Java类型，使用Set去重
+     */
+    public static Set<String> getJavaTypes(List<Field> fieldList) {
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < fieldList.size(); i++) {
+            Field field = fieldList.get(i);
+            set.add(field.getJavaType());
+        }
+        return set;
     }
 }

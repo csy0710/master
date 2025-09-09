@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import static com.jiawa.train.generator.util.DbUtil.getJavaTypes;
 
 public class ServerGenerator {
     static String serverPath = "[module]/src/main/java/com/jiawa/train/[module]/";
@@ -55,12 +58,6 @@ public class ServerGenerator {
         DbUtil.password = password.getText();
 
 
-        // 表中文名
-        String tableNameCn = DbUtil.getTableComment(tableName.getText());
-        List<Field> fieldList = DbUtil.getColumnByTableName(tableName.getText());
-
-
-
         /*更改ftl模板文件中的￥{domain}变量*/
         // 示例：表名 jiawa_test
         // Domain = JiawaTest
@@ -70,21 +67,30 @@ public class ServerGenerator {
         // do_main = jiawa-test
         String do_main = tableName.getText().replaceAll("_", "-");
 
+        // 表中文名
+        String tableNameCn = DbUtil.getTableComment(tableName.getText());
+        List<Field> fieldList = DbUtil.getColumnByTableName(tableName.getText());
+        Set<String> typeSet = getJavaTypes(fieldList);
+
         // 组装参数
         Map<String, Object> param = new HashMap<>();
         param.put("Domain", Domain);
         param.put("domain", domain);
         param.put("do_main", do_main);
+        param.put("tableNameCn", tableNameCn);
+        param.put("fieldList", fieldList);
+        param.put("typeSet", typeSet);
         System.out.println("组装参数：" + param);
 
-        gen(Domain, param,"service");
-        gen(Domain, param,"controller");
+        gen(Domain, param,"service","service");
+        gen(Domain, param,"controller","controller");
+          gen(Domain, param,"req","saveReq");
 
     }
     /*将输出写成一个方法*/
-    private static void gen(String Domain, Map<String, Object> param,String target) throws IOException, TemplateException {
+    private static void gen(String Domain, Map<String, Object> param,String packageName,String target) throws IOException, TemplateException {
         FreemarkerUtil.initConfig(target + ".ftl");//生成代码要使用的模板名字（需要更改）
-        String toPath = serverPath + target + "/";
+        String toPath = serverPath + packageName + "/";
         new  File(toPath).mkdirs();
         String Target = target.substring(0,1).toUpperCase() + target.substring(1);
         String fileName =toPath + Domain + Target + ".java";
