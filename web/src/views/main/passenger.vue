@@ -23,9 +23,9 @@
         </a-space>
       </template>
       <template v-else-if="column.dataIndex === 'type'">
-        <span v-for="item in PASSENGER_TYPE" :key="item.key">
-          <span v-if="item.key === record.type">
-            {{item.value}}
+        <span v-for="item in PASSENGER_TYPE_ARRAY" :key="item.code">
+          <span v-if="item.code === record.type">
+            {{item.desc}}
           </span>
         </span>
       </template>
@@ -42,8 +42,8 @@
       </a-form-item>
       <a-form-item label="旅客类型">
         <a-select v-model:value="passenger.type">
-          <a-select-option v-for="item in PASSENGER_TYPE" :key="item.key" :value="item.key">
-            {{item.value}}
+          <a-select-option v-for="item in PASSENGER_TYPE_ARRAY" :key="item.code" :value="item.code">
+            {{item.desc}}
           </a-select-option>
         </a-select>
       </a-form-item>
@@ -59,7 +59,7 @@ import axios from "axios";
 export default defineComponent({
   name: "passenger-view",
   setup() {
-    const PASSENGER_TYPE = window.PASSENGER_TYPE;
+    const PASSENGER_TYPE_ARRAY = window.PASSENGER_TYPE_ARRAY;
     const visible = ref(false);
     let passenger = ref({
       id: undefined,
@@ -153,7 +153,7 @@ export default defineComponent({
           size: pagination.value.pageSize
         };
       }
-      loading.value=true;
+      loading.value = true;
       axios.get("/member/passenger/query-list", {
         params: {
           page: param.page,
@@ -190,7 +190,7 @@ export default defineComponent({
     });
 
     return {
-      PASSENGER_TYPE,
+      PASSENGER_TYPE_ARRAY,
       passenger,
       visible,
       passengers,
