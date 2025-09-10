@@ -1,6 +1,5 @@
 package com.jiawa.train.${module}.controller;
 
-import com.jiawa.train.common.context.LoginMemberContext;
 import com.jiawa.train.common.resp.CommonResp;
 import com.jiawa.train.common.resp.PageResp;
 import com.jiawa.train.${module}.req.${Domain}QueryReq;
@@ -26,7 +25,6 @@ public class ${Domain}Controller {
 
     @GetMapping ("/query-list")
     public CommonResp<PageResp<${Domain}QueryResp>> queryList(@Valid ${Domain}QueryReq req) {
-        req.setMemberId(LoginMemberContext.getId());
         PageResp<${Domain}QueryResp> list = ${domain}Service.queryList(req);
         return new CommonResp<>(list);
     }

@@ -9,13 +9,17 @@ const routes = [
     path: '/',
     component: () => import('../views/main.vue'),
 
-    children: [{
-      path: 'welcome',
-      component: () => import('../views/main/welcome.vue'),
-    },
+    children: [
+        {
+        path: 'welcome',
+        component: () => import('../views/main/welcome.vue'),
+      },
       {
         path: 'about',
         component: () => import('../views/main/about.vue'),
+      },{
+        path: 'station',
+        component: () => import('../views/main/station.vue'),
       },]
   },{
     path: '',//访问根域名（‘/’）直接跳转到根域名下welcome，/main/welcome
