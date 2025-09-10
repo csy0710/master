@@ -9,17 +9,15 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-
-    <artifactId>member</artifactId>
+    <artifactId>business</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <dependencies>
-<!--引入公共模块common的依赖-->
+        <!--引入公共模块common的依赖-->
         <dependency>
             <groupId>com.jiawa</groupId>
             <artifactId>common</artifactId>
@@ -48,12 +46,11 @@
     <build>
         <plugins>
             <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                        <version>3.5.5</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.5.5</version>
 
             </plugin>
         </plugins>
     </build>
-
 </project>
