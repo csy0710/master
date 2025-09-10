@@ -71,7 +71,7 @@ public class TrainService {
     //查询所有车次编号
     public List<TrainQueryResp> queryAll() {
         TrainExample trainExample = new TrainExample();
-        trainExample.setOrderByClause("code desc");
+        trainExample.setOrderByClause("code asc");
         List<Train> trainList = trainMapper.selectByExample(trainExample);
         return BeanUtil.copyToList(trainList, TrainQueryResp.class);
     }

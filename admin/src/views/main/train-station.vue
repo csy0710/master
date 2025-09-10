@@ -28,7 +28,11 @@
            ok-text="确认" cancel-text="取消">
     <a-form :model="trainStation" :label-col="{span: 4}" :wrapper-col="{ span: 20 }">
       <a-form-item label="车次编号">
-        <a-input v-model:value="trainStation.trainCode" />
+        <a-select v-mode:value="trainStation.trainCode" show-search :filter-option="filterTrainCodeOption">
+          <a-select-option v-for="item in trains" :key="item.code" :value="item.code" :label="item.code+item.start+item.end">
+            {{item.code}} | {{item.start}} ~ {{item.end}}
+          </a-select-option>
+        </a-select>
       </a-form-item>
       <a-form-item label="站序">
         <a-input v-model:value="trainStation.index" />
@@ -217,16 +221,27 @@ export default defineComponent({
         size: page.pageSize
       });
     };
-
+//-----------------------车次下拉框---------------------------
+    const trains = ref({});
+    /**
+     * 查询所有车次，用于车次下拉框
+     */
     const queryTrainCode = () =>{
       axios.get("/business/admin/train/query-all").then((response)=>{
         let data = response.data;
         if (data.success){
-          console.log(data.content);
+          trains.value = data.content;
         }else {
           notification.error({description: data.content});
         }
       });
+    };
+    /**
+     * 车次下拉框的筛选
+     */
+    const filterTrainCodeOption = (input,option) =>{
+      console.log(input,option);
+      return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
     };
 
     onMounted(() => {
@@ -249,7 +264,9 @@ export default defineComponent({
       onAdd,
       handleOk,
       onEdit,
-      onDelete
+      onDelete,
+      filterTrainCodeOption,
+      trains
     };
   },
 });
