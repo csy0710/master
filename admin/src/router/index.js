@@ -20,6 +20,9 @@ const routes = [
       },{
         path: 'station',
         component: () => import('../views/main/station.vue'),
+      },{
+        path: 'train',
+        component: () => import('../views/main/train.vue'),
       },]
   },{
     path: '',//访问根域名（‘/’）直接跳转到根域名下welcome，/main/welcome
