@@ -26,6 +26,9 @@ const routes = [
       },{
         path: 'train-station',
         component: () => import('../views/main/train-station.vue'),
+      },{
+        path: 'train-carriage',
+        component: () => import('../views/main/train-carriage.vue'),
       },]
   },{
     path: '',//访问根域名（‘/’）直接跳转到根域名下welcome，/main/welcome
