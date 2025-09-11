@@ -22,7 +22,7 @@ export default defineComponent({
   setup(props, {emit}) {
     const trainCode = ref();
     const trains = ref([]);
-    const localWidth = ref(props.width);
+    const localWidth = ref(props.width);//自定义组件width
     if (Tool.isEmpty(props.width)) {
       localWidth.value = "100%";
     }
