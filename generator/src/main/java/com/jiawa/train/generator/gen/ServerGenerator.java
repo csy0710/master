@@ -19,7 +19,7 @@ import java.util.Set;
 import static com.jiawa.train.generator.util.DbUtil.getJavaTypes;
 
 public class ServerGenerator {
-    static boolean readOnly = false;/*权限管理，如果不是会员，部分功能不会对其开放。*/
+    static boolean readOnly = true;/*权限管理，如果不是会员，部分功能不会对其开放。*/
     static String vuePath = "admin/src/views/main/";
     static String serverPath = "[module]/src/main/java/com/jiawa/train/[module]/";
     static String pomPath ="generator/pom.xml";
@@ -86,11 +86,11 @@ public class ServerGenerator {
         param.put("readOnly", readOnly);
         System.out.println("组装参数：" + param);
 
-        gen(Domain, param,"service","service");
-        gen(Domain, param,"controller/admin","adminController");
-        gen(Domain, param,"req","saveReq");
-        gen(Domain, param, "req", "queryReq");
-        gen(Domain, param, "resp", "queryResp");
+//        gen(Domain, param,"service","service");
+//        gen(Domain, param,"controller/admin","adminController");
+//        gen(Domain, param,"req","saveReq");
+//        gen(Domain, param, "req", "queryReq");
+//        gen(Domain, param, "resp", "queryResp");
         genVue(do_main, param);
     }
     /*将输出写成一个方法*/
