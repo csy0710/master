@@ -7,6 +7,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jiawa.train.business.domain.TrainCarriage;
 import com.jiawa.train.business.domain.TrainCarriageExample;
+import com.jiawa.train.business.enums.SeatColEnum;
 import com.jiawa.train.business.mapper.TrainCarriageMapper;
 import com.jiawa.train.business.req.TrainCarriageQueryReq;
 import com.jiawa.train.business.req.TrainCarriageSaveReq;
@@ -27,6 +28,11 @@ public class TrainCarriageService {
     private TrainCarriageMapper trainCarriageMapper;
     public void save(TrainCarriageSaveReq req){
         DateTime now = DateTime.now();
+        // 自动计算出列数和总座位数
+        List<SeatColEnum> seatColEnums = SeatColEnum.getColsByType(req.getSeatType());
+        req.setColCount(seatColEnums.size());
+        req.setSeatCount(req.getColCount() * req.getRowCount());
+
         // 将请求对象req的属性复制到TrainCarriage对象中（需要确保两个类的属性名和类型匹配）
         TrainCarriage trainCarriage = BeanUtil.copyProperties(req, TrainCarriage.class);
         if (ObjectUtil.isNull(trainCarriage.getId())){/*根据id判断是新增保存还是编辑保存*/
