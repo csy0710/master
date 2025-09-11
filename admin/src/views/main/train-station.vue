@@ -28,11 +28,7 @@
            ok-text="确认" cancel-text="取消">
     <a-form :model="trainStation" :label-col="{span: 4}" :wrapper-col="{ span: 20 }">
       <a-form-item label="车次编号">
-        <a-select v-mode:value="trainStation.trainCode" show-search :filter-option="filterTrainCodeOption">
-          <a-select-option v-for="item in trains" :key="item.code" :value="item.code" :label="item.code+item.start+item.end">
-            {{item.code}} | {{item.start}} ~ {{item.end}}
-          </a-select-option>
-        </a-select>
+        <train-select-view v-mode:value="trainStation.trainCode" ></train-select-view>
       </a-form-item>
       <a-form-item label="站序">
         <a-input v-model:value="trainStation.index" />
@@ -64,9 +60,10 @@ import { defineComponent, ref, onMounted,watch } from 'vue';
 import {notification} from "ant-design-vue";
 import axios from "axios";
 import {pinyin} from "pinyin-pro";
-
+import TrainSelectView from "@/components/train-select";
 export default defineComponent({
   name: "train-station-view",
+  components:{TrainSelectView},
   setup() {
     const visible = ref(false);
     let trainStation = ref({
