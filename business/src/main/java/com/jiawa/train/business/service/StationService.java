@@ -1,10 +1,13 @@
 package com.jiawa.train.business.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jiawa.train.common.exception.BusinessException;
+import com.jiawa.train.common.exception.BusinessExceptionEnum;
 import com.jiawa.train.common.resp.PageResp;
 import com.jiawa.train.common.util.SnowUtil;
 import com.jiawa.train.business.domain.Station;
@@ -30,6 +33,14 @@ public class StationService {
         // 将请求对象req的属性复制到Station对象中（需要确保两个类的属性名和类型匹配）
         Station station = BeanUtil.copyProperties(req, Station.class);
         if (ObjectUtil.isNull(station.getId())){/*根据id判断是新增保存还是编辑保存*/
+            //保存之前先校验唯一键是否存在
+            StationExample stationExample = new StationExample();// 创建MyBatis的Example查询对象
+           stationExample.createCriteria().andNameEqualTo(req.getName());   // 创建查询条件Criteria对象
+            List<Station> list = stationMapper.selectByExample(stationExample);
+            if (CollUtil.isNotEmpty(list)){
+                throw new BusinessException(BusinessExceptionEnum.BUSINESS_STATION_NAME_UNIQUE_ERROR);
+
+            }
             /*新增保存*/
             station.setId(SnowUtil.getSnowflakeNextId());
             station.setCreateTime(now);
