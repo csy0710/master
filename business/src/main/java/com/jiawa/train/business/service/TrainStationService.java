@@ -47,6 +47,10 @@ public class TrainStationService {
         trainStationExample.setOrderByClause("id desc");
         TrainStationExample.Criteria criteria = trainStationExample.createCriteria();    // 创建查询条件Criteria对象
 
+        if (ObjectUtil.isNotNull(req.getTrainCode())){// 条件判断：如果请求参数中的会员ID不为空，则添加会员ID等于条件
+            criteria.andTrainCodeEqualTo(req.getTrainCode());
+        } // 执行查询，获取乘客实体列表
+
         /*在TrainStationQueryReq req传入的参数中包含页码和页数*/
         LOG.info("查询页码：{}",req.getPage());
         LOG.info("每条页数：{}",req.getSize());
