@@ -33,11 +33,8 @@ public class StationService {
         // 将请求对象req的属性复制到Station对象中（需要确保两个类的属性名和类型匹配）
         Station station = BeanUtil.copyProperties(req, Station.class);
         if (ObjectUtil.isNull(station.getId())){/*根据id判断是新增保存还是编辑保存*/
-            //保存之前先校验唯一键是否存在
-            StationExample stationExample = new StationExample();// 创建MyBatis的Example查询对象
-           stationExample.createCriteria().andNameEqualTo(req.getName());   // 创建查询条件Criteria对象
-            List<Station> list = stationMapper.selectByExample(stationExample);
-            if (CollUtil.isNotEmpty(list)){
+            Station stationDB = selectByUnique(req.getName());
+            if (ObjectUtil.isNotEmpty(stationDB)){
                 throw new BusinessException(BusinessExceptionEnum.BUSINESS_STATION_NAME_UNIQUE_ERROR);
 
             }
@@ -51,6 +48,18 @@ public class StationService {
             stationMapper.updateByPrimaryKey(station);
         }
 
+    }
+
+    private Station selectByUnique(String name) {
+        //保存之前先校验唯一键是否存在
+        StationExample stationExample = new StationExample();// 创建MyBatis的Example查询对象
+        stationExample.createCriteria().andNameEqualTo(name);   // 创建查询条件Criteria对象
+        List<Station> list = stationMapper.selectByExample(stationExample);
+        if (CollUtil.isNotEmpty(list)){
+            return list.get(0);
+        }else {
+            return null;
+        }
     }
 
     public PageResp<StationQueryResp> queryList(StationQueryReq req){
