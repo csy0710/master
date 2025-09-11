@@ -44,8 +44,13 @@ public class TrainCarriageService {
 
     public PageResp<TrainCarriageQueryResp> queryList(TrainCarriageQueryReq req){
         TrainCarriageExample trainCarriageExample = new TrainCarriageExample();// 创建MyBatis的Example查询对象
-        trainCarriageExample.setOrderByClause("id desc");
+        trainCarriageExample.setOrderByClause("train_code asc,`index` asc");
         TrainCarriageExample.Criteria criteria = trainCarriageExample.createCriteria();    // 创建查询条件Criteria对象
+
+
+        if (ObjectUtil.isNotEmpty(req.getTrainCode())){// 条件判断：如果请求参数中的会员ID不为空，则添加会员ID等于条件
+            criteria.andTrainCodeEqualTo(req.getTrainCode());
+        } // 执行查询，获取乘客实体列表
 
         /*在TrainCarriageQueryReq req传入的参数中包含页码和页数*/
         LOG.info("查询页码：{}",req.getPage());

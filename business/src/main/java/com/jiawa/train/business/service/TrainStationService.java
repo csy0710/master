@@ -44,10 +44,10 @@ public class TrainStationService {
 
     public PageResp<TrainStationQueryResp> queryList(TrainStationQueryReq req){
         TrainStationExample trainStationExample = new TrainStationExample();// 创建MyBatis的Example查询对象
-        trainStationExample.setOrderByClause("id desc");
+        trainStationExample.setOrderByClause("train_code asc,`index` asc");
         TrainStationExample.Criteria criteria = trainStationExample.createCriteria();    // 创建查询条件Criteria对象
 
-        if (ObjectUtil.isNotNull(req.getTrainCode())){// 条件判断：如果请求参数中的会员ID不为空，则添加会员ID等于条件
+        if (ObjectUtil.isNotEmpty(req.getTrainCode())){// 条件判断：如果请求参数中的会员ID不为空，则添加会员ID等于条件
             criteria.andTrainCodeEqualTo(req.getTrainCode());
         } // 执行查询，获取乘客实体列表
 

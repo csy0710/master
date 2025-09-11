@@ -46,7 +46,7 @@ public class PassengerService {
 
     public PageResp<PassengerQueryResp> queryList(PassengerQueryReq req){
         PassengerExample passengerExample = new PassengerExample();// 创建MyBatis的Example查询对象
-        passengerExample.setOrderByClause("train_code asc,`index` asc");
+        passengerExample.setOrderByClause("id desc");
         PassengerExample.Criteria criteria = passengerExample.createCriteria();    // 创建查询条件Criteria对象
         if (ObjectUtil.isNotNull(req.getMemberId())){// 条件判断：如果请求参数中的会员ID不为空，则添加会员ID等于条件
             criteria.andMemberIdEqualTo(req.getMemberId());
