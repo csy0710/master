@@ -1,6 +1,7 @@
 package com.jiawa.train.business.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
@@ -12,6 +13,8 @@ import com.jiawa.train.business.mapper.TrainCarriageMapper;
 import com.jiawa.train.business.req.TrainCarriageQueryReq;
 import com.jiawa.train.business.req.TrainCarriageSaveReq;
 import com.jiawa.train.business.resp.TrainCarriageQueryResp;
+import com.jiawa.train.common.exception.BusinessException;
+import com.jiawa.train.common.exception.BusinessExceptionEnum;
 import com.jiawa.train.common.resp.PageResp;
 import com.jiawa.train.common.util.SnowUtil;
 import jakarta.annotation.Resource;
@@ -36,6 +39,12 @@ public class TrainCarriageService {
         // 将请求对象req的属性复制到TrainCarriage对象中（需要确保两个类的属性名和类型匹配）
         TrainCarriage trainCarriage = BeanUtil.copyProperties(req, TrainCarriage.class);
         if (ObjectUtil.isNull(trainCarriage.getId())){/*根据id判断是新增保存还是编辑保存*/
+            //保存之前，先校验唯一键是否存在
+            TrainCarriage trainCarriageDB = selectByUnique(req.getTrainCode(), req.getIndex());
+            if (ObjectUtil.isNotEmpty(trainCarriageDB)){
+                throw new BusinessException(BusinessExceptionEnum.BUSINESS_TRAIN_CARRIAGE_INDEX_UNIQUE_ERROR);
+
+            }
             /*新增保存*/
             trainCarriage.setId(SnowUtil.getSnowflakeNextId());
             trainCarriage.setCreateTime(now);
@@ -48,6 +57,19 @@ public class TrainCarriageService {
 
     }
 
+    private TrainCarriage selectByUnique(String trainCode,Integer index) {
+        //保存之前先校验唯一键是否存在
+        TrainCarriageExample trainCarriageExample = new TrainCarriageExample();// 创建MyBatis的Example查询对象
+        trainCarriageExample.createCriteria()
+                .andTrainCodeEqualTo(trainCode)
+                .andIndexEqualTo(index);   // 创建查询条件Criteria对象
+        List<TrainCarriage> list = trainCarriageMapper.selectByExample(trainCarriageExample);
+        if (CollUtil.isNotEmpty(list)){
+            return list.get(0);
+        }else {
+            return null;
+        }
+    }
     public PageResp<TrainCarriageQueryResp> queryList(TrainCarriageQueryReq req){
         TrainCarriageExample trainCarriageExample = new TrainCarriageExample();// 创建MyBatis的Example查询对象
         trainCarriageExample.setOrderByClause("train_code asc,`index` asc");
@@ -92,4 +114,7 @@ public class TrainCarriageService {
         criteria.andTrainCodeEqualTo(trainCode);
         return trainCarriageMapper.selectByExample(trainCarriageExample);
     };
+
+
+
 }

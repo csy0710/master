@@ -1,18 +1,21 @@
 package com.jiawa.train.business.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jiawa.train.common.resp.PageResp;
-import com.jiawa.train.common.util.SnowUtil;
 import com.jiawa.train.business.domain.TrainStation;
 import com.jiawa.train.business.domain.TrainStationExample;
 import com.jiawa.train.business.mapper.TrainStationMapper;
 import com.jiawa.train.business.req.TrainStationQueryReq;
 import com.jiawa.train.business.req.TrainStationSaveReq;
 import com.jiawa.train.business.resp.TrainStationQueryResp;
+import com.jiawa.train.common.exception.BusinessException;
+import com.jiawa.train.common.exception.BusinessExceptionEnum;
+import com.jiawa.train.common.resp.PageResp;
+import com.jiawa.train.common.util.SnowUtil;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +33,16 @@ public class TrainStationService {
         // 将请求对象req的属性复制到TrainStation对象中（需要确保两个类的属性名和类型匹配）
         TrainStation trainStation = BeanUtil.copyProperties(req, TrainStation.class);
         if (ObjectUtil.isNull(trainStation.getId())){/*根据id判断是新增保存还是编辑保存*/
+            //保存之前，先校验唯一键是否存在
+            TrainStation trainStationDB = selectByUnique(req.getTrainCode(), req.getIndex());
+            if (ObjectUtil.isNotEmpty(trainStationDB)){
+                throw new BusinessException(BusinessExceptionEnum.BUSINESS_TRAIN_STATION_INDEX_UNIQUE_ERROR);
+            }
+            //保存之前，先校验唯一键是否存在
+            trainStationDB = selectByUnique(req.getTrainCode(), req.getName());
+            if (ObjectUtil.isNotEmpty(trainStationDB)){
+                throw new BusinessException(BusinessExceptionEnum.BUSINESS_TRAIN_STATION_NAME_UNIQUE_ERROR);
+            }
             /*新增保存*/
             trainStation.setId(SnowUtil.getSnowflakeNextId());
             trainStation.setCreateTime(now);
@@ -42,6 +55,33 @@ public class TrainStationService {
 
     }
 
+    private TrainStation selectByUnique(String trainCode, Integer index) {
+        //保存之前先校验唯一键是否存在
+        TrainStationExample trainStationExample = new TrainStationExample();// 创建MyBatis的Example查询对象
+        trainStationExample.createCriteria()
+                .andTrainCodeEqualTo(trainCode)
+                .andIndexEqualTo(index);   // 创建查询条件Criteria对象
+        List<TrainStation> list = trainStationMapper.selectByExample(trainStationExample);
+        if (CollUtil.isNotEmpty(list)){
+            return list.get(0);
+        }else {
+            return null;
+        }
+    }
+
+    private TrainStation selectByUnique(String trainCode, String name) {
+        //保存之前先校验唯一键是否存在
+        TrainStationExample trainStationExample = new TrainStationExample();// 创建MyBatis的Example查询对象
+        trainStationExample.createCriteria()
+                .andTrainCodeEqualTo(trainCode)
+                .andNameEqualTo(name);   // 创建查询条件Criteria对象
+        List<TrainStation> list = trainStationMapper.selectByExample(trainStationExample);
+        if (CollUtil.isNotEmpty(list)){
+            return list.get(0);
+        }else {
+            return null;
+        }
+    }
     public PageResp<TrainStationQueryResp> queryList(TrainStationQueryReq req){
         TrainStationExample trainStationExample = new TrainStationExample();// 创建MyBatis的Example查询对象
         trainStationExample.setOrderByClause("train_code asc,`index` asc");

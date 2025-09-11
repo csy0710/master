@@ -33,6 +33,7 @@ public class StationService {
         // 将请求对象req的属性复制到Station对象中（需要确保两个类的属性名和类型匹配）
         Station station = BeanUtil.copyProperties(req, Station.class);
         if (ObjectUtil.isNull(station.getId())){/*根据id判断是新增保存还是编辑保存*/
+            //保存之前，先校验唯一键是否存在
             Station stationDB = selectByUnique(req.getName());
             if (ObjectUtil.isNotEmpty(stationDB)){
                 throw new BusinessException(BusinessExceptionEnum.BUSINESS_STATION_NAME_UNIQUE_ERROR);
