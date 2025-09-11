@@ -3,20 +3,24 @@ package com.jiawa.train.business.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jiawa.train.common.resp.PageResp;
-import com.jiawa.train.common.util.SnowUtil;
+import com.jiawa.train.business.domain.TrainCarriage;
 import com.jiawa.train.business.domain.TrainSeat;
 import com.jiawa.train.business.domain.TrainSeatExample;
+import com.jiawa.train.business.enums.SeatColEnum;
 import com.jiawa.train.business.mapper.TrainSeatMapper;
 import com.jiawa.train.business.req.TrainSeatQueryReq;
 import com.jiawa.train.business.req.TrainSeatSaveReq;
 import com.jiawa.train.business.resp.TrainSeatQueryResp;
+import com.jiawa.train.common.resp.PageResp;
+import com.jiawa.train.common.util.SnowUtil;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +29,8 @@ public class TrainSeatService {
       public static final Logger LOG = LoggerFactory.getLogger(TrainSeatService.class);
     @Resource
     private TrainSeatMapper trainSeatMapper;
+    @Resource
+    private TrainCarriageService trainCarriageService;
     public void save(TrainSeatSaveReq req){
         DateTime now = DateTime.now();
         // 将请求对象req的属性复制到TrainSeat对象中（需要确保两个类的属性名和类型匹配）
@@ -76,4 +82,49 @@ public class TrainSeatService {
         trainSeatMapper.deleteByPrimaryKey(id);
     }
 
+    @Transactional     //增加事务处理，要么生成成功，要么生成失败
+    public void genTrainSeat(String trainCode){
+        DateTime now = DateTime.now();
+        //清空当前车次下所有的座位记录
+        TrainSeatExample trainSeatExample = new TrainSeatExample();// 创建MyBatis的Example查询对象
+        TrainSeatExample.Criteria criteria = trainSeatExample.createCriteria();    // 创建查询条件Criteria对象
+        criteria.andTrainCodeEqualTo(trainCode);
+        trainSeatMapper.deleteByExample(trainSeatExample);//删除所有车次下的数据
+        //查找当前车次下的所有的车厢
+        List<TrainCarriage> carriageList = trainCarriageService.selectByTrainCode(trainCode);
+        LOG.info("查找当前车次下的车厢数：{}",carriageList.size());
+        //循环生成每个车厢的座位
+        for (TrainCarriage trainCarriage:carriageList){
+            //拿到车厢数据，行数，座位类型（得到列数）
+            Integer rowCount = trainCarriage.getRowCount();
+            String seatType = trainCarriage.getSeatType();
+            int seatIndex = 1;
+            //根据车厢的座位类型筛选出所有的列，比如车厢是一等座那么筛选出来columnList是（ABCD）
+            List<SeatColEnum> colEnumList = SeatColEnum.getColsByType(seatType);
+            LOG.info("根据车厢的座位类型,筛选出所有的列：{}",colEnumList);
+            //循环行数
+            for (int row = 1; row <= rowCount; row++) {
+                //循环列数
+                for (SeatColEnum seatColEnum: colEnumList)
+                {
+                    //构造座位数据并保存数据库
+                    TrainSeat trainSeat = new TrainSeat();
+                    trainSeat.setId(SnowUtil.getSnowflakeNextId());
+                    trainSeat.setTrainCode(trainCode);
+                    trainSeat.setCarriageIndex(trainCarriage.getIndex());
+                    trainSeat.setRow(StrUtil.fillBefore(String.valueOf(row), '0', 2));//使用hutool工具填充数字，是两位不填充，不够两位填充0
+                    trainSeat.setCol(seatColEnum.getCode());
+                    trainSeat.setSeatType(seatType);
+                    trainSeat.setCarriageSeatIndex(seatIndex++);
+                    trainSeat.setCreateTime(now);
+                    trainSeat.setUpdateTime(now);
+                    trainSeatMapper.insert(trainSeat);
+
+                }
+
+
+            }
+        }
+
+    }
 }
