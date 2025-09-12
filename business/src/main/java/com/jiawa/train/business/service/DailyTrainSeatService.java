@@ -44,8 +44,12 @@ public class DailyTrainSeatService {
 
     public PageResp<DailyTrainSeatQueryResp> queryList(DailyTrainSeatQueryReq req){
         DailyTrainSeatExample dailyTrainSeatExample = new DailyTrainSeatExample();// 创建MyBatis的Example查询对象
-        dailyTrainSeatExample.setOrderByClause("id desc");
+        dailyTrainSeatExample.setOrderByClause("train_code asc,carriage_index asc,carriage_seat_index asc");
         DailyTrainSeatExample.Criteria criteria = dailyTrainSeatExample.createCriteria();    // 创建查询条件Criteria对象
+
+        if (ObjectUtil.isNotEmpty(req.getTrainCode())){// 条件判断：如果请求参数中的会员ID不为空，则添加会员ID等于条件
+            criteria.andTrainCodeEqualTo(req.getTrainCode());
+        } // 执行查询，获取乘客实体列表
 
         /*在DailyTrainSeatQueryReq req传入的参数中包含页码和页数*/
         LOG.info("查询页码：{}",req.getPage());
