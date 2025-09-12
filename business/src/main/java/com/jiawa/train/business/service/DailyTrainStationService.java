@@ -44,8 +44,15 @@ public class DailyTrainStationService {
 
     public PageResp<DailyTrainStationQueryResp> queryList(DailyTrainStationQueryReq req){
         DailyTrainStationExample dailyTrainStationExample = new DailyTrainStationExample();// 创建MyBatis的Example查询对象
-        dailyTrainStationExample.setOrderByClause("id desc");
+        dailyTrainStationExample.setOrderByClause("date desc,train_code asc,`index` asc");
         DailyTrainStationExample.Criteria criteria = dailyTrainStationExample.createCriteria();    // 创建查询条件Criteria对象
+
+        if (ObjectUtil.isNotNull(req.getDate())){// 条件判断：如果请求参数中的会员ID不为空，则添加会员ID等于条件
+            criteria.andDateEqualTo(req.getDate());
+        } // 执行查询，获取乘客实体列表
+        if (ObjectUtil.isNotEmpty(req.getTrainCode())){// 条件判断：如果请求参数中的会员ID不为空，则添加会员ID等于条件
+            criteria.andTrainCodeEqualTo(req.getTrainCode());
+        } // 执行查询，获取乘客实体列表
 
         /*在DailyTrainStationQueryReq req传入的参数中包含页码和页数*/
         LOG.info("查询页码：{}",req.getPage());
