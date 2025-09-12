@@ -1,6 +1,8 @@
 <template>
   <p>
     <a-space>
+      <a-date-picker v-model:value="params.date" valueFormat="YYYY-MM-DD" placeholder="请选择日期" />
+      <train-select-view v-model:value="params.code" width="200px"></train-select-view>
       <a-button type="primary" @click="handleQuery()">刷新</a-button>
       <a-button type="primary" @click="onAdd">新增</a-button>
     </a-space>
@@ -81,6 +83,7 @@ export default defineComponent({
   setup() {
     const TRAIN_TYPE_ARRAY = window.TRAIN_TYPE_ARRAY;
     const visible = ref(false);
+
     let dailyTrain = ref({
       id: undefined,
       date: undefined,
@@ -103,6 +106,9 @@ export default defineComponent({
       pageSize: 10,
     });
     let loading = ref(false);
+    let params = ref({
+      code:null
+    });
     const columns = [
     {
       title: '日期',
@@ -207,7 +213,9 @@ export default defineComponent({
       axios.get("/business/admin/daily-train/query-list", {
         params: {
           page: param.page,
-          size: param.size
+          size: param.size,
+          code:params.value.code,
+          date:params.value.date,
         }
       }).then((response) => {
         loading.value = false;
@@ -261,7 +269,8 @@ export default defineComponent({
       handleOk,
       onEdit,
       onDelete,
-      onChangeCode
+      onChangeCode,
+      params
     };
   },
 });

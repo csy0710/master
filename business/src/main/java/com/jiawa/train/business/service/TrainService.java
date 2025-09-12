@@ -65,7 +65,7 @@ public class TrainService {
     }
     public PageResp<TrainQueryResp> queryList(TrainQueryReq req){
         TrainExample trainExample = new TrainExample();// 创建MyBatis的Example查询对象
-        trainExample.setOrderByClause("id desc");
+        trainExample.setOrderByClause("code asc");
         TrainExample.Criteria criteria = trainExample.createCriteria();    // 创建查询条件Criteria对象
 
         /*在TrainQueryReq req传入的参数中包含页码和页数*/
