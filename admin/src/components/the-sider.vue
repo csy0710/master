@@ -33,9 +33,15 @@
           <router-link to="/business/daily-train-station">
             <user-outlined /> &nbsp; 每日车站
           </router-link>
-        </a-menu-item><a-menu-item key="/business/daily-train-carriage">
+        </a-menu-item>
+        <a-menu-item key="/business/daily-train-carriage">
           <router-link to="/business/daily-train-carriage">
             <user-outlined /> &nbsp; 每日车厢
+          </router-link>
+        </a-menu-item>
+        <a-menu-item key="/business/daily-train-seat">
+          <router-link to="/business/daily-train-seat">
+            <user-outlined /> &nbsp; 每日座位
           </router-link>
         </a-menu-item>
       </a-sub-menu>
