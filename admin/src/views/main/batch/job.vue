@@ -13,7 +13,7 @@
              :loading="loading">
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'operation'">
-          <a-space>
+          <a-space><!--新增手动执行-->
             <a-popconfirm
                 title="手动执行会立即执行一次，确定执行？"
                 ok-text="是"
@@ -238,7 +238,7 @@ export default defineComponent({
     };
 
     /**
-     * 手动执行
+     * 手动执行/新增
      */
     const handleRun = (record) => {
       axios.post('/batch/admin/job/run', record).then((response) => {

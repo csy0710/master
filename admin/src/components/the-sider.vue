@@ -16,19 +16,22 @@
           <user-outlined /> &nbsp; 关于
         </router-link>
       </a-menu-item>
-      <a-sub-menu key="batch">
-       <template #title>
-        <span>
-          <UnorderedListOutlined />
-          跑批管理
-        </span>
-       </template>
-        <a-menu-item key="/batch/job">
-          <router-link to="/batch/job">
-            <user-outlined /> &nbsp; 任务管理
+      <a-sub-menu key="business">
+        <template #title>
+            <span>
+              <UnorderedListOutlined />
+            业务管理
+            </span>
+        </template>
+
+        <a-menu-item key="/business/daily-train">
+          <router-link to="/business/daily-train">
+            <user-outlined /> &nbsp; 每日车次
           </router-link>
+
         </a-menu-item>
       </a-sub-menu>
+
         <a-sub-menu key="base">
           <template #title>
             <span>
@@ -62,6 +65,19 @@
         </router-link>
       </a-menu-item>
         </a-sub-menu>
+      <a-sub-menu key="batch">
+        <template #title>
+        <span>
+          <UnorderedListOutlined />
+          跑批管理
+        </span>
+        </template>
+        <a-menu-item key="/batch/job">
+          <router-link to="/batch/job">
+            <user-outlined /> &nbsp; 任务管理
+          </router-link>
+        </a-menu-item>
+      </a-sub-menu>
     </a-menu>
   </a-layout-sider>
 </template>
