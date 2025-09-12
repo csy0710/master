@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jiawa.train.business.enums.SeatColEnum;
 import com.jiawa.train.common.resp.PageResp;
 import com.jiawa.train.common.util.SnowUtil;
 import com.jiawa.train.business.domain.DailyTrainCarriage;
@@ -27,6 +28,10 @@ public class DailyTrainCarriageService {
     private DailyTrainCarriageMapper dailyTrainCarriageMapper;
     public void save(DailyTrainCarriageSaveReq req){
         DateTime now = DateTime.now();
+        // 自动计算出列数和总座位数
+        List<SeatColEnum> seatColEnums = SeatColEnum.getColsByType(req.getSeatType());
+        req.setColCount(seatColEnums.size());
+        req.setSeatCount(req.getColCount() * req.getRowCount());
         // 将请求对象req的属性复制到DailyTrainCarriage对象中（需要确保两个类的属性名和类型匹配）
         DailyTrainCarriage dailyTrainCarriage = BeanUtil.copyProperties(req, DailyTrainCarriage.class);
         if (ObjectUtil.isNull(dailyTrainCarriage.getId())){/*根据id判断是新增保存还是编辑保存*/
@@ -44,9 +49,14 @@ public class DailyTrainCarriageService {
 
     public PageResp<DailyTrainCarriageQueryResp> queryList(DailyTrainCarriageQueryReq req){
         DailyTrainCarriageExample dailyTrainCarriageExample = new DailyTrainCarriageExample();// 创建MyBatis的Example查询对象
-        dailyTrainCarriageExample.setOrderByClause("id desc");
+        dailyTrainCarriageExample.setOrderByClause("date desc,train_code asc,`index` asc");
         DailyTrainCarriageExample.Criteria criteria = dailyTrainCarriageExample.createCriteria();    // 创建查询条件Criteria对象
-
+        if (ObjectUtil.isNotNull(req.getDate())){// 条件判断：如果请求参数中的会员ID不为空，则添加会员ID等于条件
+            criteria.andDateEqualTo(req.getDate());
+        } // 执行查询，获取乘客实体列表
+        if (ObjectUtil.isNotEmpty(req.getTrainCode())){// 条件判断：如果请求参数中的会员ID不为空，则添加会员ID等于条件
+            criteria.andTrainCodeEqualTo(req.getTrainCode());
+        } // 执行查询，获取乘客实体列表
         /*在DailyTrainCarriageQueryReq req传入的参数中包含页码和页数*/
         LOG.info("查询页码：{}",req.getPage());
         LOG.info("每条页数：{}",req.getSize());

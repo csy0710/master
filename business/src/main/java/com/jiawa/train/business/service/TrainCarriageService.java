@@ -31,6 +31,7 @@ public class TrainCarriageService {
     private TrainCarriageMapper trainCarriageMapper;
     public void save(TrainCarriageSaveReq req){
         DateTime now = DateTime.now();
+
         // 自动计算出列数和总座位数
         List<SeatColEnum> seatColEnums = SeatColEnum.getColsByType(req.getSeatType());
         req.setColCount(seatColEnums.size());
