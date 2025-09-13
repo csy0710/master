@@ -35,6 +35,8 @@ public class DailyTrainService {
     private DailyTrainStationService dailyTrainStationService;
     @Resource
     private DailyTrainCarriageService dailyTrainCarriageService;
+    @Resource
+    private DailyTrainSeatService dailyTrainSeatService;
     public void save(DailyTrainSaveReq req){
         DateTime now = DateTime.now();
         // 将请求对象req的属性复制到DailyTrain对象中（需要确保两个类的属性名和类型匹配）
@@ -127,6 +129,8 @@ public class DailyTrainService {
         dailyTrainStationService.genDaily(date,train.getCode());
         //生成该车次车厢的数据
         dailyTrainCarriageService.genDaily(date,train.getCode());
+        //生成该车次座位的数据
+        dailyTrainSeatService.genDaily(date,train.getCode());
         LOG.info("生成日期【{}】车次【{}】的信息结束", DateUtil.formatDate(date),train.getCode());
     }
 }

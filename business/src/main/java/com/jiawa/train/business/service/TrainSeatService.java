@@ -127,4 +127,14 @@ public class TrainSeatService {
         }
 
     }
+
+    public List<TrainSeat> selectByTrainCode(String trainCode){
+        //清空当前车次下所有的座位记录
+        TrainSeatExample trainSeatExample = new TrainSeatExample();// 创建MyBatis的Example查询对象
+        trainSeatExample.setOrderByClause("`id` asc");
+        TrainSeatExample.Criteria criteria = trainSeatExample.createCriteria();    // 创建查询条件Criteria对象
+        criteria.andTrainCodeEqualTo(trainCode);
+        return trainSeatMapper.selectByExample(trainSeatExample);
+    };
+
 }
