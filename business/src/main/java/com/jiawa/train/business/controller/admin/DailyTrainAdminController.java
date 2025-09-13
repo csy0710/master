@@ -8,7 +8,10 @@ import com.jiawa.train.business.resp.DailyTrainQueryResp;
 import com.jiawa.train.business.service.DailyTrainService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 @RequestMapping("/admin/daily-train")
@@ -31,6 +34,11 @@ public class DailyTrainAdminController {
     @DeleteMapping("/delete/{id}")/*resful风格的请求*/
     public CommonResp<Object> delete(@PathVariable Long id) {/*@PathVariable注解，取@DeleteMapping("/delete/{id}")变量*/
         dailyTrainService.delete(id);
+        return new CommonResp<>();
+    }
+    @GetMapping("/gen-daily/{date}")/*resful风格的请求*/
+    public CommonResp<Object> delete(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {/*@PathVariable注解，取@DeleteMapping("/delete/{id}")变量*/
+        dailyTrainService.genDaily(date);
         return new CommonResp<>();
     }
 
