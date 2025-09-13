@@ -3,6 +3,7 @@ package com.jiawa.train.business.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -30,6 +31,8 @@ public class DailyTrainService {
     private DailyTrainMapper dailyTrainMapper;
     @Resource
     private TrainService trainService;
+    @Resource
+    private DailyTrainStationService dailyTrainStationService;
     public void save(DailyTrainSaveReq req){
         DateTime now = DateTime.now();
         // 将请求对象req的属性复制到DailyTrain对象中（需要确保两个类的属性名和类型匹配）
@@ -102,6 +105,7 @@ public class DailyTrainService {
 
     }
     public void genDailyTrain(Date date,Train train){
+        LOG.info("开始生成日期【{}】车次【{}】的信息", DateUtil.formatDate(date),train.getCode());
         //删除该车次已有的数据
         DailyTrainExample dailyTrainExample = new DailyTrainExample();// 创建MyBatis的Example查询对象
         dailyTrainExample.createCriteria()
@@ -116,5 +120,9 @@ public class DailyTrainService {
         dailyTrain.setUpdateTime(now);
         dailyTrain.setDate(date);
         dailyTrainMapper.insert(dailyTrain);
+
+        //生成该车次车站的数据
+        dailyTrainStationService.genDaily(date,train.getCode());
+        LOG.info("生成日期【{}】车次【{}】的信息结束", DateUtil.formatDate(date),train.getCode());
     }
 }

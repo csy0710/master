@@ -117,4 +117,11 @@ public class TrainStationService {
         trainStationMapper.deleteByPrimaryKey(id);
     }
 
+    public List<TrainStation> selectByTrainCode(String trainCode) {
+        //保存之前先校验唯一键是否存在
+        TrainStationExample trainStationExample = new TrainStationExample();// 创建MyBatis的Example查询对象
+        trainStationExample.setOrderByClause("`index` asc");
+        trainStationExample.createCriteria().andTrainCodeEqualTo(trainCode);
+        return trainStationMapper.selectByExample(trainStationExample);
+    }
 }
