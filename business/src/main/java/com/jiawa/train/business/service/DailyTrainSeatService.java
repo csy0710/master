@@ -51,7 +51,7 @@ public class DailyTrainSeatService {
 
     public PageResp<DailyTrainSeatQueryResp> queryList(DailyTrainSeatQueryReq req){
         DailyTrainSeatExample dailyTrainSeatExample = new DailyTrainSeatExample();// 创建MyBatis的Example查询对象
-        dailyTrainSeatExample.setOrderByClause("train_code asc,carriage_index asc,carriage_seat_index asc");
+        dailyTrainSeatExample.setOrderByClause("date desc,train_code asc,carriage_seat_index asc");
         DailyTrainSeatExample.Criteria criteria = dailyTrainSeatExample.createCriteria();    // 创建查询条件Criteria对象
 
         if (ObjectUtil.isNotEmpty(req.getTrainCode())){// 条件判断：如果请求参数中的会员ID不为空，则添加会员ID等于条件
@@ -113,7 +113,9 @@ public class DailyTrainSeatService {
             dailyTrainSeat.setDate(date);
             dailyTrainSeat.setSell(sell);
             dailyTrainSeatMapper.insert(dailyTrainSeat);
+            LOG.info("{}号火车的sell存储在dailyTrainSeatMapper中的值为：{}",trainSeat.getTrainCode(),dailyTrainSeat.getSell());
         }
+
         LOG.info("生成日期【{}】车次【{}】的座位信息结束", DateUtil.formatDate(date),trainCode);
     }
 }
