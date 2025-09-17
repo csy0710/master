@@ -16,7 +16,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 public class EnumGenerator {
-     static String path = "admin/src/assets/js/enums.js";
+     static String path = "web/src/assets/js/enums.js";
 //    static String path = "admin/src/assets/js/enums.js";
 
     public static void main(String[] args) {
