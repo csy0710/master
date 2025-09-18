@@ -19,7 +19,10 @@
 
   </div>
   <a-divider></a-divider>
-  {{passengers}}
+  <b>勾选要购票的乘客</b>&nbsp;
+  <a-checkbox-group v-model:value="passengerChecks" :options="passsengerOptions"></a-checkbox-group>
+  <br/>
+  选中的乘客：{{passengerChecks}}
 </template>
 <script>
 
@@ -37,6 +40,8 @@ export default defineComponent({
   },
   setup(){
     const passengers = ref([]);
+    const passsengerOptions =ref([]);
+    const passengerChecks = ref([]);
     const dailyTrainTicket = SessionStorage.get(SESSION_ORDER) || {};
     console.log("下单的车次信息",dailyTrainTicket);
     const SEAT_TYPE = window.SEAT_TYPE;
@@ -70,6 +75,10 @@ export default defineComponent({
         let data = response.data;
         if (data.success) {
           passengers.value = data.content;
+          passengers.value.forEach((item)=>passsengerOptions.value.push({
+            label:item.name,
+            value:item.id
+          }))
         } else {
           notification.error({description: data.message});
         }
@@ -83,6 +92,8 @@ export default defineComponent({
       dailyTrainTicket,
       seatTypes,
       passengers,
+      passsengerOptions,
+      passengerChecks
     }
   }
 })
