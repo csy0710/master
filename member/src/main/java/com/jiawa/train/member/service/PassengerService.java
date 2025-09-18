@@ -77,4 +77,13 @@ public class PassengerService {
         passengerMapper.deleteByPrimaryKey(id);
     }
 
+    public List<PassengerQueryResp> queryMine(){
+        PassengerExample passengerExample = new PassengerExample();
+        passengerExample.setOrderByClause("name asc");
+        PassengerExample.Criteria criteria = passengerExample.createCriteria();
+        criteria.andMemberIdEqualTo(LoginMemberContext.getId());
+        List<Passenger> list = passengerMapper.selectByExample(passengerExample);
+        return BeanUtil.copyToList(list,PassengerQueryResp.class);
+    }
+
 }
