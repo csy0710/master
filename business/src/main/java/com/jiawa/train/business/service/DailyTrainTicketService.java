@@ -9,10 +9,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jiawa.train.business.domain.DailyTrain;
-import com.jiawa.train.business.domain.DailyTrainTicket;
-import com.jiawa.train.business.domain.DailyTrainTicketExample;
-import com.jiawa.train.business.domain.TrainStation;
+import com.jiawa.train.business.domain.*;
 import com.jiawa.train.business.enums.SeatTypeEnum;
 import com.jiawa.train.business.enums.TrainTypeEnum;
 import com.jiawa.train.business.mapper.DailyTrainTicketMapper;
@@ -169,5 +166,19 @@ public class DailyTrainTicketService {
         }
         LOG.info("生成日期【{}】车次【{}】的车站信息结束", DateUtil.formatDate(date),trainCode);
     }
-
+    public DailyTrainTicket selectByUnique(Date date,String trainCode, String start,String end) {
+        //保存之前先校验唯一键是否存在
+        DailyTrainTicketExample dailyTrainTicketExample = new DailyTrainTicketExample();// 创建MyBatis的Example查询对象
+        dailyTrainTicketExample.createCriteria()
+                .andDateEqualTo(date)
+                .andTrainCodeEqualTo(trainCode)
+                .andStartEqualTo(start)  // 创建查询条件Criteria对象
+                .andEndEqualTo(end);
+        List<DailyTrainTicket> list = dailyTrainTicketMapper.selectByExample(dailyTrainTicketExample);
+        if (CollUtil.isNotEmpty(list)){
+            return list.get(0);
+        }else {
+            return null;
+        }
+    }
 }
