@@ -2,6 +2,7 @@ package com.jiawa.train.member.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.util.ObjUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jiawa.train.common.req.MemberTicketReq;
@@ -42,7 +43,9 @@ public class TicketService {
         TicketExample ticketExample = new TicketExample();// 创建MyBatis的Example查询对象
         ticketExample.setOrderByClause("id desc");
         TicketExample.Criteria criteria = ticketExample.createCriteria();    // 创建查询条件Criteria对象
-
+        if (ObjUtil.isNotNull(req.getMemberId())){
+            criteria.andMemberIdEqualTo(req.getMemberId());
+        }
         /*在TicketQueryReq req传入的参数中包含页码和页数*/
         LOG.info("查询页码：{}",req.getPage());
         LOG.info("每条页数：{}",req.getSize());
