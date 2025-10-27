@@ -190,7 +190,7 @@ public class ConfirmOrderService {
         // 为会员增加购票记录
         // 更新确认订单为成功
         try {
-            afterConfirmOrderService.afterDoConfirm(dailyTrainTicket,finalSeatList,tickets);
+            afterConfirmOrderService.afterDoConfirm(dailyTrainTicket,finalSeatList,tickets, confirmOrder);
         } catch (Exception e) {
             LOG.error("保存购票信息失败", e);
         }
