@@ -18,7 +18,7 @@ POST http://localhost:8000/batch/admin/job/pause
 Content-Type: application/json
 
 {
-  "name": "com.jiawa.train.batch.job.TestJob",
+  "name": "com.jiawa.train.batch.job.DailyTrainJob",
   "jobGroupName": "default"
 }
 
