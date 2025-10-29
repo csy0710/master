@@ -1,7 +1,7 @@
 // 所有的session key都在这里统一定义，可以避免多个功能使用同一个key
 SESSION_ORDER = "SESSION_ORDER";
 SESSION_TICKET_PARAMS = "SESSION_TICKET_PARAMS";
-
+SESSION_ALL_TRAIN = "SESSION_ALL_TRAIN"
 SessionStorage = {
     get: function (key) {
         var v = sessionStorage.getItem(key);//h5提供的会话缓存，使用getItem获取缓存，获取token 浏览器关闭无效
