@@ -9,7 +9,10 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jiawa.train.business.domain.*;
+import com.jiawa.train.business.domain.DailyTrain;
+import com.jiawa.train.business.domain.DailyTrainTicket;
+import com.jiawa.train.business.domain.DailyTrainTicketExample;
+import com.jiawa.train.business.domain.TrainStation;
 import com.jiawa.train.business.enums.SeatTypeEnum;
 import com.jiawa.train.business.enums.TrainTypeEnum;
 import com.jiawa.train.business.mapper.DailyTrainTicketMapper;
@@ -21,6 +24,7 @@ import com.jiawa.train.common.util.SnowUtil;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +58,7 @@ public class DailyTrainTicketService {
         }
 
     }
-
+@CachePut(value = "DailyTrainTicketService.queryList")
     public PageResp<DailyTrainTicketQueryResp> queryList(DailyTrainTicketQueryReq req){
         DailyTrainTicketExample dailyTrainTicketExample = new DailyTrainTicketExample();// 创建MyBatis的Example查询对象
         dailyTrainTicketExample.setOrderByClause("id desc");
