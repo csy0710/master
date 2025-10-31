@@ -193,6 +193,7 @@ public class ConfirmOrderService {
             afterConfirmOrderService.afterDoConfirm(dailyTrainTicket,finalSeatList,tickets, confirmOrder);
         } catch (Exception e) {
             LOG.error("保存购票信息失败", e);
+            throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_EXCEPTION);
         }
 
     }

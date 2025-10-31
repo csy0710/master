@@ -11,6 +11,8 @@ public enum BusinessExceptionEnum {
     BUSINESS_TRAIN_CARRIAGE_INDEX_UNIQUE_ERROR("同车次厢号已存在"),
 
     CONFIRM_ORDER_TICKET_COUNT_ERROR("余票不足"),
+    CONFIRM_ORDER_EXCEPTION("服务器繁忙请稍后重试"),
+
     ;
     BusinessExceptionEnum(String desc) {
         this.desc = desc;
