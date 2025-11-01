@@ -91,7 +91,7 @@
         </hashTree>
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="线程组">
-        <intProp name="ThreadGroup.num_threads">50</intProp>
+        <intProp name="ThreadGroup.num_threads">100</intProp>
         <intProp name="ThreadGroup.ramp_time">1</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
@@ -143,7 +143,7 @@
               </elementProp>
               <elementProp name="token" elementType="Header">
                 <stringProp name="Header.name">token</stringProp>
-                <stringProp name="Header.value">eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3NjIwMDI5NTksIm1vYmlsZSI6IjEzMDAwMDAwMDAwIiwiaWQiOjE5Nzk1MTU1MDg0ODMwMzUxMzYsImV4cCI6MTc2MjAwNjU1OSwiaWF0IjoxNzYyMDAyOTU5fQ.1wTi1-XucFkPm54i8HhXWthS4SgBReoYox8DMOelivs </stringProp>
+                <stringProp name="Header.value">eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE3NjIwMTMwODYsIm1vYmlsZSI6IjEzMDAwMDAwMDAwIiwiaWQiOjE5Nzk1MTU1MDg0ODMwMzUxMzYsImV4cCI6MTc2MjAxNjY4NiwiaWF0IjoxNzYyMDEzMDg2fQ.EUhHZ0zPYRBcjuj_9KXn_9NtwJdDZu2j8k4cTlMbtEI </stringProp>
               </elementProp>
             </collectionProp>
           </HeaderManager>
