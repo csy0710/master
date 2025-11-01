@@ -13,11 +13,11 @@ import com.jiawa.train.common.context.LoginMemberContext;
 import com.jiawa.train.common.req.MemberTicketReq;
 import com.jiawa.train.common.resp.CommonResp;
 import io.seata.core.context.RootContext;
-import io.seata.spring.annotation.GlobalTransactional;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -45,8 +45,8 @@ public class AfterConfirmOrderService {
      * 为会员增加购票记录
      * 更新确认订单为成功
      */
-    // @Transactional
-     @GlobalTransactional
+     @Transactional
+//     @GlobalTransactional
     public void afterDoConfirm(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> finalSeatList, List<ConfirmOrderTicketReq> tickets, ConfirmOrder confirmOrder) throws Exception {
          LOG.info("seata全局事务ID: {}", RootContext.getXID());
         for (int j = 0; j < finalSeatList.size(); j++) {
@@ -118,9 +118,9 @@ public class AfterConfirmOrderService {
             confirmOrderForUpdate.setStatus(ConfirmOrderStatusEnum.SUCCESS.getCode());
             confirmOrderMapper.updateByPrimaryKeySelective(confirmOrderForUpdate);
 
-            if (1 == 1){
-                throw new Exception("测试异常");
-            }
+//            if (1 == 1){
+//                throw new Exception("测试异常");
+//            }
 
 
         }

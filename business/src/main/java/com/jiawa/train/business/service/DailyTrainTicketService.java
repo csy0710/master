@@ -24,7 +24,6 @@ import com.jiawa.train.common.util.SnowUtil;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,7 +57,8 @@ public class DailyTrainTicketService {
         }
 
     }
-@CachePut(value = "DailyTrainTicketService.queryList")
+//@CachePut(value = "DailyTrainTicketService.queryList")
+//@Cacheable(value = "DailyTrainTicketService.queryList")
     public PageResp<DailyTrainTicketQueryResp> queryList(DailyTrainTicketQueryReq req){
         DailyTrainTicketExample dailyTrainTicketExample = new DailyTrainTicketExample();// 创建MyBatis的Example查询对象
         dailyTrainTicketExample.setOrderByClause("id desc");

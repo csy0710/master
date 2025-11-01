@@ -27,11 +27,13 @@ import com.jiawa.train.common.util.SnowUtil;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ConfirmOrderService {
@@ -48,6 +50,9 @@ public class ConfirmOrderService {
 
     @Resource
     private AfterConfirmOrderService afterConfirmOrderService;
+
+    @Resource
+    private StringRedisTemplate redisTemplate;
     public void save(ConfirmOrderDoReq req){
         DateTime now = DateTime.now();
         // 将请求对象req的属性复制到ConfirmOrder对象中（需要确保两个类的属性名和类型匹配）
@@ -97,7 +102,16 @@ public class ConfirmOrderService {
     }
 
 
-    public void doConfirm(ConfirmOrderDoReq req){
+    public synchronized void doConfirm(ConfirmOrderDoReq req){
+        String key =req.getDate() + "-" + req.getTrainCode();
+        Boolean setIfAbsent = redisTemplate.opsForValue().setIfAbsent(key, key, 5, TimeUnit.SECONDS);
+        if (setIfAbsent){
+            LOG.info("恭喜，抢到锁了");
+        }else {
+            LOG.info("未抢到锁");
+            throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_LOCK_FAIL);
+
+        }
 
         Date date = req.getDate();
         String trainCode = req.getTrainCode();
