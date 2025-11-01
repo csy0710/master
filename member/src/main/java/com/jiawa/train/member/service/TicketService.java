@@ -13,7 +13,6 @@ import com.jiawa.train.member.domain.TicketExample;
 import com.jiawa.train.member.mapper.TicketMapper;
 import com.jiawa.train.member.req.TicketQueryReq;
 import com.jiawa.train.member.resp.TicketQueryResp;
-import io.seata.core.context.RootContext;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,7 @@ public class TicketService {
     @Resource
     private TicketMapper ticketMapper;
     public void save(MemberTicketReq req) throws Exception{
-        LOG.info("seata全局事务id save：{}", RootContext.getXID());
+//        LOG.info("seata全局事务id save：{}", RootContext.getXID());
         DateTime now = DateTime.now();
         // 将请求对象req的属性复制到Ticket对象中（需要确保两个类的属性名和类型匹配）
         Ticket ticket = BeanUtil.copyProperties(req, Ticket.class);

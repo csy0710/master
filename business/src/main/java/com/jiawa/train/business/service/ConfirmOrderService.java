@@ -26,7 +26,6 @@ import com.jiawa.train.common.exception.BusinessExceptionEnum;
 import com.jiawa.train.common.resp.PageResp;
 import com.jiawa.train.common.util.SnowUtil;
 import jakarta.annotation.Resource;
-import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,52 +112,42 @@ public class ConfirmOrderService {
     public synchronized void doConfirm(ConfirmOrderDoReq req){
         String lockKey = DateUtil.formatDate(req.getDate()) + "-" + req.getTrainCode();
 
-//        Boolean setIfAbsent = redisTemplate.opsForValue().setIfAbsent(lockKey, lockKey, 5, TimeUnit.SECONDS);
+        Boolean setIfAbsent = redisTemplate.opsForValue().setIfAbsent(lockKey, lockKey, 5, TimeUnit.SECONDS);
 
-//            if (Boolean.TRUE.equals(setIfAbsent)){
-//                LOG.info("恭喜，抢到锁了lockKey:{}",lockKey);
-//            }else {
-//                LOG.info("未抢到锁lockKey:{}",lockKey);
-//                throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_LOCK_FAIL);
-//
-//            }
-
-         RLock lock = null;
-        /*
-            关于红锁，看16.7节：
-            A B C D E
-            1: A B C D E
-            2: C D E
-            3: C
-        */
-        try {
-            // 使用redisson，自带看门狗
-            lock = redissonClient.getLock(lockKey);
-
-            // 红锁的写法
-            // RedissonRedLock redissonRedLock = new RedissonRedLock(lock, lock, lock);
-            // boolean tryLock1 = redissonRedLock.tryLock(0, TimeUnit.SECONDS);
-
-            /**
-             waitTime – the maximum time to acquire the lock 等待获取锁时间(最大尝试获得锁的时间)，超时返回false
-             leaseTime – lease time 锁时长，即n秒后自动释放锁
-             time unit – time unit 时间单位
-             */
-            // boolean tryLock = lock.tryLock(30, 10, TimeUnit.SECONDS); // 不带看门狗
-            boolean tryLock =lock.tryLock(0,TimeUnit.SECONDS);
-            if (tryLock) {
-                LOG.info("恭喜，抢到锁了！");
-                // 可以把下面这段放开，只用一个线程来测试，看看redisson的看门狗效果
-                // for (int i = 0; i < 30; i++) {
-                //     Long expire = redisTemplate.opsForValue().getOperations().getExpire(lockKey);
-                //     LOG.info("锁过期时间还有：{}", expire);
-                //     Thread.sleep(1000);
-                // }
-            } else {
-                // 只是没抢到锁，并不知道票抢完了没，所以提示稍候再试
-                LOG.info("很遗憾，没抢到锁");
+            if (Boolean.TRUE.equals(setIfAbsent)){
+                LOG.info("恭喜，抢到锁了lockKey:{}",lockKey);
+            }else {
+                LOG.info("未抢到锁lockKey:{}",lockKey);
                 throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_LOCK_FAIL);
+
             }
+
+//         RLock lock = null;
+
+        try {
+//            // 使用redisson，自带看门狗
+//            lock = redissonClient.getLock(lockKey);
+//
+//            /**
+//             waitTime – the maximum time to acquire the lock 等待获取锁时间(最大尝试获得锁的时间)，超时返回false
+//             leaseTime – lease time 锁时长，即n秒后自动释放锁
+//             time unit – time unit 时间单位
+//             */
+//            // boolean tryLock = lock.tryLock(30, 10, TimeUnit.SECONDS); // 不带看门狗
+//            boolean tryLock =lock.tryLock(0,TimeUnit.SECONDS);
+//            if (tryLock) {
+//                LOG.info("恭喜，抢到锁了！");
+//                // 可以把下面这段放开，只用一个线程来测试，看看redisson的看门狗效果
+//                // for (int i = 0; i < 30; i++) {
+//                //     Long expire = redisTemplate.opsForValue().getOperations().getExpire(lockKey);
+//                //     LOG.info("锁过期时间还有：{}", expire);
+//                //     Thread.sleep(1000);
+//                // }
+//            } else {
+//                // 只是没抢到锁，并不知道票抢完了没，所以提示稍候再试
+//                LOG.info("很遗憾，没抢到锁");
+//                throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_LOCK_FAIL);
+//            }
 
 
             Date date = req.getDate();
@@ -257,16 +246,16 @@ public class ConfirmOrderService {
                 LOG.error("保存购票信息失败", e);
                 throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_EXCEPTION);
             }
-//        LOG.info("购票流程结束，释放锁");
-//        redisTemplate.delete(lockKey);
-        } catch (InterruptedException e) {
-            LOG.error("购票异常", e);
+        LOG.info("购票流程结束，释放锁");
+        redisTemplate.delete(lockKey);
+//        } catch (InterruptedException e) {
+//            LOG.error("购票异常", e);
         } finally {
             LOG.info("购票流程结束，释放锁");
-//            锁不是空的或者锁不是当前的线程就不要释放锁
-           if (null != lock && lock.isHeldByCurrentThread()){
-               lock.unlock();
-           }
+////            锁不是空的或者锁不是当前的线程就不要释放锁
+//           if (null != lock && lock.isHeldByCurrentThread()){
+//               lock.unlock();
+//           }
         }
 
     }
