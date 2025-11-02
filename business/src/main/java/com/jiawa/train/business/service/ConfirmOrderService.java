@@ -8,6 +8,8 @@ import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -107,9 +109,9 @@ public class ConfirmOrderService {
     public void delete(Long id){
         confirmOrderMapper.deleteByPrimaryKey(id);
     }
-
-
-    public synchronized void doConfirm(ConfirmOrderDoReq req){
+//    blockHandler拦截到之后应该怎么处理
+    @SentinelResource(value = "doConfirm",blockHandler = "doConfirmBlock")
+    public void doConfirm(ConfirmOrderDoReq req){
         String lockKey = DateUtil.formatDate(req.getDate()) + "-" + req.getTrainCode();
 
         Boolean setIfAbsent = redisTemplate.opsForValue().setIfAbsent(lockKey, lockKey, 5, TimeUnit.SECONDS);
@@ -246,12 +248,13 @@ public class ConfirmOrderService {
                 LOG.error("保存购票信息失败", e);
                 throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_EXCEPTION);
             }
-        LOG.info("购票流程结束，释放锁");
-        redisTemplate.delete(lockKey);
+//        LOG.info("购票流程结束，释放锁");
+//        redisTemplate.delete(lockKey);
 //        } catch (InterruptedException e) {
 //            LOG.error("购票异常", e);
         } finally {
             LOG.info("购票流程结束，释放锁");
+            redisTemplate.delete(lockKey);
 ////            锁不是空的或者锁不是当前的线程就不要释放锁
 //           if (null != lock && lock.isHeldByCurrentThread()){
 //               lock.unlock();
@@ -423,4 +426,16 @@ public class ConfirmOrderService {
             }
         }
     }
+
+    /**
+     * 降级方法，需包含限流方法的所有参数和BlockException参数
+     * @param req
+     * @param e
+     */
+    public void doConfirmBlock(ConfirmOrderDoReq req, BlockException e) {
+        LOG.info("购票请求被限流：{}", req);
+        throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_FLOW_EXCEPTION);
+    }
+
+
 }
