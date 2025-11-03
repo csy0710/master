@@ -19,15 +19,15 @@ import java.util.Set;
 import static com.jiawa.train.generator.util.DbUtil.getJavaTypes;
 
 public class ServerGenerator {
-    static boolean readOnly = true;/*权限管理，如果不是会员，部分功能不会对其开放。*/
+    static boolean readOnly = false;/*权限管理，如果不是会员，部分功能不会对其开放。*/
     static String vuePath = "admin/src/views/main/";
     static String serverPath = "[module]/src/main/java/com/jiawa/train/[module]/";
     static String pomPath ="generator/pom.xml";
 
     static String module = "";
-    static {
-      new  File(serverPath).mkdirs();
-    }
+//    static {
+//      new  File(serverPath).mkdirs();
+//    }
     public static void main(String[] args) throws Exception {
         /*获取mybatis-generator*/
         String generatorPath = getGeneratorPath();
@@ -93,6 +93,7 @@ public class ServerGenerator {
         gen(Domain, param,"req","saveReq");
         gen(Domain, param, "req", "queryReq");
         gen(Domain, param, "resp", "queryResp");
+
         genVue(do_main, param);
     }
     /*将输出写成一个方法*/
