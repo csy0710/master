@@ -9,6 +9,7 @@ import com.github.pagehelper.PageInfo;
 import com.jiawa.train.business.domain.SkToken;
 import com.jiawa.train.business.domain.SkTokenExample;
 import com.jiawa.train.business.mapper.SkTokenMapper;
+import com.jiawa.train.business.mapper.cust.SkTokenMapperCust;
 import com.jiawa.train.business.req.SkTokenQueryReq;
 import com.jiawa.train.business.req.SkTokenSaveReq;
 import com.jiawa.train.business.resp.SkTokenQueryResp;
@@ -27,6 +28,8 @@ public class SkTokenService {
       public static final Logger LOG = LoggerFactory.getLogger(SkTokenService.class);
     @Resource
     private SkTokenMapper skTokenMapper;
+    @Resource
+    private SkTokenMapperCust skTokenMapperCust;
     @Resource
     private DailyTrainSeatService dailyTrainSeatService;
 
@@ -112,4 +115,15 @@ public class SkTokenService {
         skTokenMapper.deleteByPrimaryKey(id);
     }
 
-}
+
+    public boolean validSkToken(Date date, String trainCode, Long memberId) {
+        LOG.info("会员【{}】获取日期【{}】车次【{}】的令牌开始", memberId, DateUtil.formatDate(date), trainCode);
+        int updateCount = skTokenMapperCust.decrease(date,trainCode);
+        if (updateCount>0){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    }
