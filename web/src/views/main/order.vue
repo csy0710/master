@@ -116,7 +116,12 @@
     </p>
     <a-button type="danger" block @click="handleOk">输入验证码后开始购票</a-button>
   </a-modal>
-
+  <a-modal v-model:visible="lineModalVisible" title="null" :footer="null" :maskClosable="false" :closable="false"
+           style="top: 50px; width: 400px">
+      <div class="book-line">
+        <loading-outlined /> 系统正在处理中...
+      </div>
+  </a-modal>
 </template>
 <script>
 
@@ -132,7 +137,7 @@ export default defineComponent({
     const passengers = ref([]);
     const passsengerOptions =ref([]);
     const passengerChecks = ref([]);
-
+    const lineModalVisible =ref(false);
     const dailyTrainTicket = SessionStorage.get(SESSION_ORDER) || {};
     console.log("下单的车次信息",dailyTrainTicket);
     const SEAT_TYPE = window.SEAT_TYPE;
@@ -359,7 +364,11 @@ export default defineComponent({
       }).then((response) => {
         let data = response.data;
         if (data.success) {
-          notification.success({description: "下单成功！"});
+          // notification.success({description: "下单成功！"});
+          visible.value = false;
+          imageCodeModalVisible.value = false;
+          lineModalVisible.value = true;
+
         } else {
           notification.error({description: data.message});
         }
@@ -408,6 +417,7 @@ export default defineComponent({
       imageCode,
       imageCodeModalVisible,
       loadImageCode,
+      lineModalVisible
 
     }
   }
