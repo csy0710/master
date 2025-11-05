@@ -134,9 +134,12 @@ public class ConfirmOrderService {
             if (Boolean.TRUE.equals(setIfAbsent)){
                 LOG.info("恭喜，抢到锁了lockKey:{}",lockKey);
             }else {
-                LOG.info("未抢到锁lockKey:{}",lockKey);
-                throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_LOCK_FAIL);
+//                只是没抢到锁，不知道锁有没有卖完
+//                LOG.info("未抢到锁lockKey:{}",lockKey);
+//                throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_LOCK_FAIL);
 
+                LOG.info("没抢到锁，有其它消费线程正在出票，不做任何处理");
+                return;
             }
 
 //         RLock lock = null;
@@ -185,8 +188,21 @@ public class ConfirmOrderService {
                 }
 
                 // 一条一条的卖
-                list.forEach(this::sell);
+                list.forEach(confirmOrder -> {
+                    try {
+                        sell(confirmOrder);
+                    } catch (BusinessException e) {
+                        if (e.getE().equals(BusinessExceptionEnum.CONFIRM_ORDER_TICKET_COUNT_ERROR)) {
+                            LOG.info("本订单余票不足，继续售卖下一个订单");
+                            confirmOrder.setStatus(ConfirmOrderStatusEnum.EMPTY.getCode());
+                            updateStatus(confirmOrder);
+                        } else {
+                            throw e;
+                        }
+                    }
+                });
             }
+
 
 //        LOG.info("购票流程结束，释放锁");
 //        redisTemplate.delete(lockKey);
