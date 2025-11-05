@@ -126,21 +126,21 @@ public class ConfirmOrderService {
 //             throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_SK_TOKEN_FAIL);
 //         }
 //
-        //获取分布式锁
+        // 获取分布式锁
         String lockKey = RedisKeyPreEnum.CONFIRM_ORDER + "-" + DateUtil.formatDate(dto.getDate()) + "-" + dto.getTrainCode();
+        // setIfAbsent就是对应redis的setnx
+        Boolean setIfAbsent = redisTemplate.opsForValue().setIfAbsent(lockKey, lockKey, 10, TimeUnit.SECONDS);
+        if (Boolean.TRUE.equals(setIfAbsent)) {
+            LOG.info("恭喜，抢到锁了！lockKey：{}", lockKey);
+        } else {
+//             只是没抢到锁，并不知道票抢完了没，所以提示稍候再试
+             LOG.info("很遗憾，没抢到锁！lockKey：{}", lockKey);
+             throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_LOCK_FAIL);
 
-        Boolean setIfAbsent = redisTemplate.opsForValue().setIfAbsent(lockKey, lockKey, 5, TimeUnit.SECONDS);
+//            LOG.info("没抢到锁，有其它消费线程正在出票，不做任何处理");
+//            return;
+        }
 
-            if (Boolean.TRUE.equals(setIfAbsent)){
-                LOG.info("恭喜，抢到锁了lockKey:{}",lockKey);
-            }else {
-//                只是没抢到锁，不知道锁有没有卖完
-//                LOG.info("未抢到锁lockKey:{}",lockKey);
-//                throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_LOCK_FAIL);
-
-                LOG.info("没抢到锁，有其它消费线程正在出票，不做任何处理");
-                return;
-            }
 
 //         RLock lock = null;
 

@@ -96,10 +96,7 @@ public class BeforeConfirmOrderService {
              LOG.info("排队购票，发送mq开始，消息：{}", reqJson);
              rocketMQTemplate.convertAndSend(RocketMQTopicEnum.CONFIRM_ORDER.getCode(), reqJson);
              LOG.info("排队购票，发送mq结束");
-//            confirmOrderService.doConfirm(confirmOrderMQDto);
-//            id = confirmOrder.getId();
-//        }
-//        return id;
+
     }
 
     /**
